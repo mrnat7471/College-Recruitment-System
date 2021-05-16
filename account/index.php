@@ -1,38 +1,40 @@
-<?php 
+<?php
 include '../layout/navbar.php';
 require_once '../controllers/email_verification.php';
 $id = $_SESSION['id'];
 
 // Updates firstName AND lastName in users table for this account.
-if(isset($_POST['firstName'])){
+if (isset($_POST['firstName'])) {
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $sql = "UPDATE users SET firstName='$firstName', lastName='$lastName' WHERE uuid=$id";
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "Name updated.";
+    if ($conn->query($sql) === true) {
+        $success_message = 'Name updated.';
     } else {
-    echo "Error:" . $conn->error;
+        echo 'Error:'.$conn->error;
     }
 }
 
 // Updates email in users table for this account. It also unverifies the email, generates a new email verify string and sends a email to the
 // new email to verify it.
-if(isset($_POST['email'])){
-    function generateRandomString($length = 25) {
+if (isset($_POST['email'])) {
+    function generateRandomString($length = 25)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
+
         return $randomString;
     }
-    $emailverify =  generateRandomString();
+    $emailverify = generateRandomString();
     $email = $_POST['email'];
 
     $sql = "UPDATE users SET email='$email', verified='0', email_verify='$emailverify' WHERE uuid=$id";
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "Email updated.";
+    if ($conn->query($sql) === true) {
+        $success_message = 'Email updated.';
         $stmt = $link->prepare('SELECT firstName, lastName, email, verified, user_role FROM users WHERE uuid = ?');
         $stmt->bind_param('i', $id);
         $stmt->execute();
@@ -41,13 +43,12 @@ if(isset($_POST['email'])){
         $stmt->close();
         require_once '../controllers/email_verify.php';
     } else {
-    echo "Error:" . $conn->error;
+        echo 'Error:'.$conn->error;
     }
-
 }
 
 // Changes the current password in the database using the current password of the account.
-if(isset($_POST['currentPassword'])){
+if (isset($_POST['currentPassword'])) {
     $currentPassword = $_POST['currentPassword'];
     $newPassword = $_POST['newPassword'];
     $confirmNewPassword = $_POST['confirmNewPassword'];
@@ -59,22 +60,21 @@ if(isset($_POST['currentPassword'])){
     $stmt->fetch();
     $stmt->close();
 
-    if(password_verify($currentPassword, $password)){
-        if($newPassword == $confirmNewPassword){
+    if (password_verify($currentPassword, $password)) {
+        if ($newPassword == $confirmNewPassword) {
             $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
             $sql = "UPDATE users SET password='$newPassword' WHERE uuid=$id";
-        if ($conn->query($sql) === TRUE) {
-            $success_message = "Password updated. Please use this when you next login.";
+            if ($conn->query($sql) === true) {
+                $success_message = 'Password updated. Please use this when you next login.';
+            } else {
+                echo 'Error:'.$conn->error;
+            }
         } else {
-        echo "Error:" . $conn->error;
+            $danger_message = 'New passwords do not match.';
         }
-        }else{
-            $danger_message = "New passwords do not match.";
-        }
-    }else{
-        $danger_message = "Current Password is incorrect.";
+    } else {
+        $danger_message = 'Current Password is incorrect.';
     }
-
 }
 
 // Grabs account information.
@@ -94,15 +94,15 @@ $stmt->fetch();
 $stmt->close();
 ?>
 <div class="account-content">
-<?php if($verified != 0){ ?>
+<?php if ($verified != 0) { ?>
     <h2><b>Your Account</b></h2>
-    <?php if(isset($success_message) || isset($danger_message)){ ?>
+    <?php if (isset($success_message) || isset($danger_message)) { ?>
     <div class="m-2">
-        <?php if(isset($success_message)){ ?>
+        <?php if (isset($success_message)) { ?>
         <div class="alert alert-success" role="alert">
             <?= $success_message; ?>
         </div>
-        <?php } if(isset($danger_message)){ ?>
+        <?php } if (isset($danger_message)) { ?>
         <div class="alert alert-danger" role="alert">
             <?= $danger_message; ?>
         </div>
@@ -110,12 +110,12 @@ $stmt->close();
     </div>
     <?php } ?>
     <h5>Hello, <?= $firstName ?>.</h5>
-    <?php if($ROLE_MANAGE){ ?>
+    <?php if ($ROLE_MANAGE) { ?>
     <h6><b>Role:</b> 
     <?php
-    if(isset($USER_ROLE_MANAGE)){
+    if (isset($USER_ROLE_MANAGE)) {
         echo $name;
-        }
+    }
     }
     ?></h6>
 
@@ -148,7 +148,7 @@ $stmt->close();
 
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Update</button><br><br>
     </form>
-    <?php }else{ ?>
+    <?php } else { ?>
         <h2>Email Verification required!</h2>
     <p>Please verify your email before continueing.</p> 
 <?php }  ?>
@@ -168,4 +168,4 @@ $stmt->close();
     }
 }
 </style>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>

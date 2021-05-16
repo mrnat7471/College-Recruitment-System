@@ -1,4 +1,4 @@
-<?php 
+<?php
 include '../layout/navbar.php';
 ?>
 <div class="course-background">
@@ -41,7 +41,7 @@ include '../layout/navbar.php';
   </div>
   </div>
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .course-background{
     background-image: url("https://www.calderdale.ac.uk/wp-content/uploads/2021/01/march-open-day.jpg");

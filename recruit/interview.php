@@ -1,7 +1,7 @@
 <?php include '../layout/navbar.php';
 
 $id = $_SESSION['id'];
-$date_1 = "";
+$date_1 = '';
 
 // Grabs interview information of user.
 $stmt = $link->prepare('SELECT * FROM interviews WHERE profile_id = ?');
@@ -29,7 +29,7 @@ $stmt->close();
 ?>
 <div class="content">
     <h5><b>Interview</b></h5>
-    <p>Dear <?=$firstName;?><br><br>
+    <p>Dear <?=$firstName; ?><br><br>
 
     Thank you for applying for your course and would love to offer you an interview, 
     you are now on your way to becoming a student at Calderdale College.<br><br>
@@ -63,7 +63,7 @@ $stmt->close();
     <b><?=$staff_firstName?> <?=$staff_lastName?></b><br>
     Staff Member.</p>
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .content{
     margin-left:250px;

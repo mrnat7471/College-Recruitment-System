@@ -1,21 +1,21 @@
 <?php
 include '../layout/navbar.php';
-require_once "../controllers/config.php";
+require_once '../controllers/config.php';
 require_once '../controllers/email_verification.php';
 
 $qual = 0;
 // Checks they are logged in.
-if(isset($_SESSION['id'])){
-        // Gets users details.
-        $accountid = $_SESSION['id'];
-        $stmt = $link->prepare('SELECT firstName, lastName, email FROM users WHERE uuid = ?');
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->bind_result($firstName, $lastName, $email);
-        $stmt->fetch();
-        $stmt->close();
+if (isset($_SESSION['id'])) {
+    // Gets users details.
+    $accountid = $_SESSION['id'];
+    $stmt = $link->prepare('SELECT firstName, lastName, email FROM users WHERE uuid = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->bind_result($firstName, $lastName, $email);
+    $stmt->fetch();
+    $stmt->close();
     // Checks a course has been selected.
-    if(isset($_GET['id'])){
+    if (isset($_GET['id'])) {
         // Gets course Name.
         $courseID = $_GET['id'];
         $stmt2 = $link->prepare('SELECT name FROM courses WHERE uuid = ?');
@@ -24,13 +24,13 @@ if(isset($_SESSION['id'])){
         $stmt2->bind_result($courseName);
         $stmt2->fetch();
         $stmt2->close();
-    }else{
-        header("Location: ../?danger=Please search then apply for a course.");
+    } else {
+        header('Location: ../?danger=Please search then apply for a course.');
     }
-}else{
-    header("Location: ../?danger=Please Login.");
+} else {
+    header('Location: ../?danger=Please Login.');
 }
-if(isset($_POST['title']) || isset($_POST['firstName'])){
+if (isset($_POST['title']) || isset($_POST['firstName'])) {
     // Adds application to application table.
     $id = $_SESSION['id'];
     $course_id = $_GET['id'];
@@ -54,32 +54,31 @@ if(isset($_POST['title']) || isset($_POST['firstName'])){
     $sql = "INSERT INTO applications (profile_id, course_id, title, nin, sex, dob, mobile, one_address, postcode, town, national, ethnicity, uk_eu_resident, criminal_con, learning_diff, children_home, wellbeing, interview_assist, staff_id, progress)
         VALUES ('$id', '$course_id', '$title','$nin', '$sex', '$dob', '$mobile', '$one_address', '$postcode', '$town', '$national', '$ethnicity', '$uk_eu_resident', '$criminal_con', '$learning_diff', '$children_home', '$wellbeing', '$interview_assist', '0', '0')";
 
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql) === true) {
         $id = $_SESSION['id'];
         $sql = "UPDATE users SET progress='1' WHERE uuid=$id";
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) === true) {
             $qual = 1;
             $connection = $link;
             $id = $_SESSION['id'];
-            //ORDER BY RAND() 
-            $sql3 = "SELECT * from qualifications";
-            $result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-            $emparray3 = array();
-            while($row3 =mysqli_fetch_assoc($result3))
-            {
+            //ORDER BY RAND()
+            $sql3 = 'SELECT * from qualifications';
+            $result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+            $emparray3 = [];
+            while ($row3 = mysqli_fetch_assoc($result3)) {
                 $emparray3[] = $row3;
             }
             $apidata3 = json_encode($emparray3);
             $data3 = json_decode($apidata3);
         } else {
-        echo "Error:" . $conn->error;
+            echo 'Error:'.$conn->error;
         }
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo 'Error: '.$sql.'<br>'.$conn->error;
     }
 }
 
-if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['grade']) || isset($_POST['pred']) || isset($_POST['year'])){
+if (isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['grade']) || isset($_POST['pred']) || isset($_POST['year'])) {
     // Adds qualifications to table.
     $id = $_SESSION['id'];
 
@@ -91,28 +90,27 @@ if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['g
     $sql = "INSERT INTO qualifications (profile_id, subject, qual, grade, predicted, year)
         VALUES ('$id', '$subject', '$qual', '$grade', '$predicted', '$year')";
 
-        if ($conn->query($sql) === TRUE) {
-            $qual = 1;
-            $connection = $link;
-            $sql3 = "SELECT * from qualifications";
-            $result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-            $emparray3 = array();
-            while($row3 =mysqli_fetch_assoc($result3))
-            {
-                $emparray3[] = $row3;
-            }
-            $apidata3 = json_encode($emparray3);
-            $data3 = json_decode($apidata3);
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+    if ($conn->query($sql) === true) {
+        $qual = 1;
+        $connection = $link;
+        $sql3 = 'SELECT * from qualifications';
+        $result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+        $emparray3 = [];
+        while ($row3 = mysqli_fetch_assoc($result3)) {
+            $emparray3[] = $row3;
         }
+        $apidata3 = json_encode($emparray3);
+        $data3 = json_decode($apidata3);
+    } else {
+        echo 'Error: '.$sql.'<br>'.$conn->error;
+    }
 }
 ?>
 
 <div class="apply-content">
-<?php if($verified != 0){ ?>
+<?php if ($verified != 0) { ?>
     <h2><b>Application Process</b></h2>
-    <?php if($qual == 0){ ?>
+    <?php if ($qual == 0) { ?>
     <p>Hello, <b><?= $firstName ?></b>. Welcome to the Calderdale College application
     process, we will talk you through the full process till your fully enrolled
     and ready to study here. Firstly, you are applying for <b><?=$courseName?></b>.
@@ -259,7 +257,7 @@ if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['g
         <br><button class="btn btn-primary my-2 my-sm-0" type="submit">Next</button>
     </form>
     <?php }
-    if($qual == 1){ ?>
+    if ($qual == 1) { ?>
 
     <p>Final section...POG. We need to know what you been up to during secondary school. Let us know what qualifications you have
     or going to get below.</p>
@@ -274,28 +272,30 @@ if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['g
         </thead>
         <tbody>
             <?php
-            foreach($data3 as $apidata3){
-            $profile_id = $apidata3->profile_id;
-            if($id == $profile_id){
+            foreach ($data3 as $apidata3) {
                 $profile_id = $apidata3->profile_id;
-                $subject = $apidata3->subject;
-                $qual = $apidata3->qual;
-                $grade = $apidata3->grade;
-                $predicted = $apidata3->predicted;
-                $year = $apidata3->year;
-                
-                if($predicted == 0){
-                    $predicted_text = "";
-                }else{
-                    $predicted_text = "(P)";
-                } ?>
+                if ($id == $profile_id) {
+                    $profile_id = $apidata3->profile_id;
+                    $subject = $apidata3->subject;
+                    $qual = $apidata3->qual;
+                    $grade = $apidata3->grade;
+                    $predicted = $apidata3->predicted;
+                    $year = $apidata3->year;
+
+                    if ($predicted == 0) {
+                        $predicted_text = '';
+                    } else {
+                        $predicted_text = '(P)';
+                    } ?>
             <tr>
                 <th scope="row"><?=$subject?></th>
                 <td><?=$qual?></td>
                 <td><?=$grade?> <?=$predicted_text?></td>
                 <td><?=$year?></td>
             </tr>
-        <?php }} ?>
+        <?php
+                }
+            } ?>
         </tbody>
     </table>
     <form method="POST">
@@ -321,7 +321,7 @@ if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['g
     <p>Are you all ready with your application? Submit it below, we can't wait to hear from you.</p>
     <a href="your-applications?success=Application has been sent"><button class="btn btn-primary my-2 my-sm-0" type="submit">Apply</button></a>
     <?php } ?>
-    <?php }else{ ?>
+    <?php } else { ?>
         <h2>Email Verification required!</h2>
     <p>Please verify your email before continueing.</p> 
 <?php }  ?>
@@ -341,4 +341,4 @@ if(isset($_POST['subject']) || isset($_POST['qualification']) || isset($_POST['g
     }
 }
 </style>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>

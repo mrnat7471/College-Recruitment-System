@@ -1,4 +1,4 @@
-<?php 
+<?php
 include 'navbar.php';
 ?>
 <div class="home-background">
@@ -41,7 +41,7 @@ include 'navbar.php';
   </div>
   </div>
 </div>
-<?php include 'layout/footer.php';?>
+<?php include 'layout/footer.php'; ?>
 <style>
 .home-background{
     background-image: url("assets/banner.jpg");

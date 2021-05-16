@@ -1,65 +1,63 @@
-<?php  
-require_once "../controllers/config.php";
+<?php
+require_once '../controllers/config.php';
 
-$roleName = "";
+$roleName = '';
 
-if(isset($_POST['role_name'])){
-  // Adds new role to roles table.
-  $roleName = $_POST['role_name'];
-  $roleslug = strtoupper($roleName);
+if (isset($_POST['role_name'])) {
+    // Adds new role to roles table.
+    $roleName = $_POST['role_name'];
+    $roleslug = strtoupper($roleName);
 
-  $sql = "INSERT INTO roles (name, slug)
+    $sql = "INSERT INTO roles (name, slug)
   VALUES ('$roleName', '$roleslug')";
 
-  if ($conn->query($sql) === TRUE) {
-
-  } else {
-      $danger_message = "Error updating record: " . $conn->error;
-  }
-  $conn->close();
-  header("Location: ./role-permissions?name=" . $roleName . "&success=Role has been created. Please manage your permissions.");
-
+    if ($conn->query($sql) === true) {
+    } else {
+        $danger_message = 'Error updating record: '.$conn->error;
+    }
+    $conn->close();
+    header('Location: ./role-permissions?name='.$roleName.'&success=Role has been created. Please manage your permissions.');
 }
 
-if(isset($post)){
-  // Checks permission given to role.
-  if(isset($_POST['ADMIN_READ'])){
-    $ADMIN_READ = 1;
-  }else{
-    $ADMIN_READ = 0;
-  }
-  if(isset($_POST['APPLICANT_READ'])){
-    $APPLICANT_READ = 1;
-  }else{
-    $APPLICANT_READ = 0;
-  }
-  if(isset($_POST['ROLE_MANAGE'])){
-    $ROLE_MANAGE = 1;
-  }else{
-    $ROLE_MANAGE = 0;
-  }
-  if(isset($_POST['USER_ROLE_MANAGE'])){
-    $USER_ROLE_MANAGE = 1;
-  }else{
-    $USER_ROLE_MANAGE = 0;
-  }
+if (isset($post)) {
+    // Checks permission given to role.
+    if (isset($_POST['ADMIN_READ'])) {
+        $ADMIN_READ = 1;
+    } else {
+        $ADMIN_READ = 0;
+    }
+    if (isset($_POST['APPLICANT_READ'])) {
+        $APPLICANT_READ = 1;
+    } else {
+        $APPLICANT_READ = 0;
+    }
+    if (isset($_POST['ROLE_MANAGE'])) {
+        $ROLE_MANAGE = 1;
+    } else {
+        $ROLE_MANAGE = 0;
+    }
+    if (isset($_POST['USER_ROLE_MANAGE'])) {
+        $USER_ROLE_MANAGE = 1;
+    } else {
+        $USER_ROLE_MANAGE = 0;
+    }
 
-  // Adds the roles permission to the role permission table.
-  $sql = "INSERT INTO roles_permissions (role_id, ADMIN_READ, APPLICANT_READ, ROLE_MANAGE, USER_ROLE_MANAGE)
+    // Adds the roles permission to the role permission table.
+    $sql = "INSERT INTO roles_permissions (role_id, ADMIN_READ, APPLICANT_READ, ROLE_MANAGE, USER_ROLE_MANAGE)
   VALUES ('$roleUUID', '$ADMIN_READ', '$APPLICANT_READ', '$ROLE_MANAGE', '$USER_ROLE_MANAGE')";
 
-  if ($conn2->query($sql) === TRUE) {
-    $success_message = "Role permissions have been set.";
-  } else {
-      $danger_message = "Error updating record: " . $conn->error;
-  }
-  $conn2->close();
+    if ($conn2->query($sql) === true) {
+        $success_message = 'Role permissions have been set.';
+    } else {
+        $danger_message = 'Error updating record: '.$conn->error;
+    }
+    $conn2->close();
 }
 
 include '../layout/navbar.php'; ?>
 
 <div class="role-content">
-<?php if($ROLE_MANAGE == 1){ ?>
+<?php if ($ROLE_MANAGE == 1) { ?>
   <h5><b>Role Management:</b></h5>
       <form method="POST">
     <div class="row">
@@ -70,12 +68,12 @@ include '../layout/navbar.php'; ?>
     </div>
     <br><button class="btn btn-primary my-2 my-sm-0" type="submit">Create</button>
   </form>
-<?php }else{ ?>
+<?php } else { ?>
   <h6>You don't have permission to go there. </h6>
 <?php }  ?>  
 </div>
 
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .role-content{
     margin-left:250px;

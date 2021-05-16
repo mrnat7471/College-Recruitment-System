@@ -1,4 +1,5 @@
 <?php
+
 // Sends email verification.
 require_once '../vendor/autoload.php';
 
@@ -134,7 +135,7 @@ $mailer = new Swift_Mailer($transport);
                         <tr>
                             <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                                 <img src="https://nathan7471.xyz/img/lAco9/zukuzOjE67.png/raw" width=250px>
-                                <h1 style="margin-top:10px;font-size: 48px; font-weight: 400; margin: 2;">Welcome ' . $firstName . '!</h1> 
+                                <h1 style="margin-top:10px;font-size: 48px; font-weight: 400; margin: 2;">Welcome '.$firstName.'!</h1> 
                                 <img src="https://www.calderdale.ac.uk/wp-content/uploads/2020/05/Computing-10.jpg" style="max-width:450px;display: block; border: 0px;" />
                             </td>
                         </tr>
@@ -156,7 +157,7 @@ $mailer = new Swift_Mailer($transport);
                                         <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                             <table border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
-                                                    <td align="center" style="border-radius: 3px;" bgcolor="#2f998a"><a href="https://calder-recruitment.nathan7471.xyz/account/verify?code=' . $emailverify . '" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #2f998a; display: inline-block;">Confirm Account</a></td>
+                                                    <td align="center" style="border-radius: 3px;" bgcolor="#2f998a"><a href="https://calder-recruitment.nathan7471.xyz/account/verify?code='.$emailverify.'" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #2f998a; display: inline-block;">Confirm Account</a></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -171,7 +172,7 @@ $mailer = new Swift_Mailer($transport);
                         </tr> <!-- COPY -->
                         <tr>
                             <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                <p style="margin: 0;"><a href="https://calder-recruitment.nathan7471.xyz/account/verify?code=' . $emailverify . '" target="_blank" style="color: #2f998a;">https://calder-recruitment.nathan7471.xyz/account/verify?code=' . $emailverify . '</a></p>
+                                <p style="margin: 0;"><a href="https://calder-recruitment.nathan7471.xyz/account/verify?code='.$emailverify.'" target="_blank" style="color: #2f998a;">https://calder-recruitment.nathan7471.xyz/account/verify?code='.$emailverify.'</a></p>
                             </td>
                         </tr>
                         <tr>

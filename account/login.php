@@ -1,38 +1,37 @@
-<?php 
+<?php
 include '../layout/navbar.php';
 
-$message = NULL;
-$email = "";
+$message = null;
+$email = '';
 
 //Checks the email and password match a account the starts a session for the login user.
-if(isset($_POST['login_submit'])){
+if (isset($_POST['login_submit'])) {
     $email = $_POST['email'];
 
     require_once '../controllers/config.php';
-    $sql = "SELECT uuid, email, password FROM users WHERE email = ?";
-            
-    if($stmt = mysqli_prepare($link, $sql)){
-        mysqli_stmt_bind_param($stmt, "s", $email);
-        if(mysqli_stmt_execute($stmt)){
+    $sql = 'SELECT uuid, email, password FROM users WHERE email = ?';
+
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        mysqli_stmt_bind_param($stmt, 's', $email);
+        if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_store_result($stmt);
-            if(mysqli_stmt_num_rows($stmt) == 1){
+            if (mysqli_stmt_num_rows($stmt) == 1) {
                 $stmt->bind_result($id, $database_email, $database_password);
                 $stmt->fetch();
                 $stmt->close();
 
                 $password = $_POST['password'];
                 echo 'hi';
-                if(password_verify($password, $database_password)){
-                    $message = "Password verified.";
-                    $_SESSION['loggedin'] = TRUE;
+                if (password_verify($password, $database_password)) {
+                    $message = 'Password verified.';
+                    $_SESSION['loggedin'] = true;
                     $_SESSION['id'] = $id;
                     header('Location: ../');
-                }else{
-                    $message = "Your password is incorrect.";
+                } else {
+                    $message = 'Your password is incorrect.';
                 }
-                
-            } else{
-                $message = "No account can be found.";
+            } else {
+                $message = 'No account can be found.';
             }
         }
     }
@@ -40,7 +39,7 @@ if(isset($_POST['login_submit'])){
 ?>
 <div class="content" style="text-align:center;">
     <h2>Log into your account!</h2>
-    <?php if($message){ ?>
+    <?php if ($message) { ?>
         <div class="alert alert-danger m-2" role="alert">
             <?= $message; ?>
         </div>
@@ -57,7 +56,7 @@ if(isset($_POST['login_submit'])){
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Login</button><br><br>
     </form>
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .content{
     margin-left:450px;

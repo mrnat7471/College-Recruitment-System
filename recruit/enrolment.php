@@ -1,8 +1,8 @@
-<?php include '../layout/navbar.php';?>
+<?php include '../layout/navbar.php'; ?>
 <div class="content">
     <h5><b>Enrolment</b></h5>
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .content{
     margin-left:250px;

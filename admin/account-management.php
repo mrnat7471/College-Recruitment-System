@@ -1,86 +1,82 @@
-<?php 
+<?php
 include '../layout/navbar.php';
-require_once "../controllers/config.php";
+require_once '../controllers/config.php';
 
-$search = "";
-$roleSearch = "";
+$search = '';
+$roleSearch = '';
 
 // Updates the selected accounts role.
-if(isset($_POST['role'])){
+if (isset($_POST['role'])) {
     $setrole = $_POST['role'];
     $useruuid = $_POST['id'];
     $sql = "UPDATE users SET user_role='$setrole' WHERE uuid=$useruuid";
 
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "Role has been updated.";
+    if ($conn->query($sql) === true) {
+        $success_message = 'Role has been updated.';
     } else {
-        $danger_message = "Error updating record: " . $conn->error;
+        $danger_message = 'Error updating record: '.$conn->error;
     }
-$conn->close();
+    $conn->close();
 }
 
 // Deletes selected account.
-if(isset($_GET['delete_account'])){
+if (isset($_GET['delete_account'])) {
     $useruuid = $_GET['id'];
     $sql = "DELETE FROM users WHERE uuid=$useruuid";
 
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "Account has been deleted.";
+    if ($conn->query($sql) === true) {
+        $success_message = 'Account has been deleted.';
     } else {
-        $danger_message = "Error updating record: " . $conn->error;
+        $danger_message = 'Error updating record: '.$conn->error;
     }
 
-$conn->close();
+    $conn->close();
 }
 
 // Gets a array of roles from roles table.
 $connection = $link;
-$sql2 = "select * from roles";
-$result2 = mysqli_query($connection, $sql2) or die("Error in Selecting " . mysqli_error($connection));
-$emparray2 = array();
-while($row2 =mysqli_fetch_assoc($result2))
-{
+$sql2 = 'select * from roles';
+$result2 = mysqli_query($connection, $sql2) or exit('Error in Selecting '.mysqli_error($connection));
+$emparray2 = [];
+while ($row2 = mysqli_fetch_assoc($result2)) {
     $emparray2[] = $row2;
 }
 $apidata2 = json_encode($emparray2);
 $data2 = json_decode($apidata2);
 
 // Search for user by lastName
-if(isset($_GET['search'])){
+if (isset($_GET['search'])) {
     $connection = $link;
     $search = $_GET['search'];
     $sql3 = "select * from users where lastName like '%$search%'";
-    $result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-    $emparray3 = array();
-    while($row3 =mysqli_fetch_assoc($result3))
-    {
+    $result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+    $emparray3 = [];
+    while ($row3 = mysqli_fetch_assoc($result3)) {
         $emparray3[] = $row3;
     }
     $apidata3 = json_encode($emparray3);
     $data3 = json_decode($apidata3);
 
-    //Search for users by role
-}elseif(isset($_GET['search_role'])){
+//Search for users by role
+} elseif (isset($_GET['search_role'])) {
     $connection = $link;
     $roleSearch = $_GET['search_role'];
     $sql3 = "SELECT * FROM users WHERE user_role = '$roleSearch'";
-    $result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-    $emparray3 = array();
-    while($row3 =mysqli_fetch_assoc($result3))
-    {
+    $result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+    $emparray3 = [];
+    while ($row3 = mysqli_fetch_assoc($result3)) {
         $emparray3[] = $row3;
     }
     $apidata3 = json_encode($emparray3);
     $data3 = json_decode($apidata3);
 
-    //Gets all users.
-}else{
+//Gets all users.
+} else {
     $connection = $link;
-    $sql3 = "select * from users";
-    $result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-    $emparray3 = array();
-    while($row3 =mysqli_fetch_assoc($result3))
-    {
+    $sql3 = 'select * from users';
+    $result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+    $emparray3 = [];
+    while ($row3 = mysqli_fetch_assoc($result3)) {
         $emparray3[] = $row3;
     }
     $apidata3 = json_encode($emparray3);
@@ -88,7 +84,7 @@ if(isset($_GET['search'])){
 }
 ?>
 <div class="role-content">
-<?php if($USER_ROLE_MANAGE == 1){ ?>
+<?php if ($USER_ROLE_MANAGE == 1) { ?>
 <div class="row">
     <div class="col">
         <form class="form-inline my-2 my-lg-0 search">
@@ -100,12 +96,14 @@ if(isset($_GET['search'])){
             <div class="row">
                 <div class="col-sm-6">
                     <select name="search_role" class="form-control" style="width:150px;">
-                    <?php foreach($data2 as $apidata2){
-                        $uuid = $apidata2->uuid;
-                        $name = $apidata2->name;
-                    ?>
-                        <option value="<?=$uuid?>" <?php if($roleSearch == $uuid){ echo 'selected="selected"';}?>><?=$name?></option>
-                    <?php } ?>
+                    <?php foreach ($data2 as $apidata2) {
+    $uuid = $apidata2->uuid;
+    $name = $apidata2->name; ?>
+                        <option value="<?=$uuid?>" <?php if ($roleSearch == $uuid) {
+        echo 'selected="selected"';
+    } ?>><?=$name?></option>
+                    <?php
+} ?>
                     </select>
                 </div>
                 <div class="col">
@@ -127,37 +125,42 @@ if(isset($_GET['search'])){
     </tr>
   </thead>
   <tbody>
-    <?php foreach($data3 as $apidata3){
+    <?php foreach ($data3 as $apidata3) {
         $uuid = $apidata3->uuid;
         $firstName = $apidata3->firstName;
         $lastName = $apidata3->lastName;
         $email = $apidata3->email;
         $verified = $apidata3->verified;
-        $user_role = $apidata3->user_role; 
+        $user_role = $apidata3->user_role;
 
         $stmt = $link->prepare("SELECT name FROM roles WHERE uuid = $user_role");
         $stmt->execute();
         $stmt->bind_result($roleName);
-        $stmt->fetch(); 
-        $stmt->close();
-    ?>
+        $stmt->fetch();
+        $stmt->close(); ?>
     <tr>
         <th scope="row"><?=$uuid?></th>
         <td><?=$firstName?></td>
         <td><?=$lastName?></td>
-        <td><?=$email?> (<?php if($verified == 1){ echo 'Verified';}else{echo 'Un-verified';}?>)</td>
+        <td><?=$email?> (<?php if ($verified == 1) {
+            echo 'Verified';
+        } else {
+            echo 'Un-verified';
+        } ?>)</td>
         <td>
             <form method="POST">
                 <div class="row">
                     <div class="col-sm-5">
                         <input type="text" name="id" value="<?=$uuid?>" style="display:none;">
                         <select name="role" class="form-control" style="width:100px;">
-                        <?php foreach($data2 as $apidata2){
-                            $uuid = $apidata2->uuid;
-                            $name = $apidata2->name;
-                        ?>
-                            <option value="<?=$uuid?>" <?php if($user_role == $uuid){ echo 'selected="selected"';}?>><?=$name?></option>
-                        <?php } ?>
+                        <?php foreach ($data2 as $apidata2) {
+            $uuid = $apidata2->uuid;
+            $name = $apidata2->name; ?>
+                            <option value="<?=$uuid?>" <?php if ($user_role == $uuid) {
+                echo 'selected="selected"';
+            } ?>><?=$name?></option>
+                        <?php
+        } ?>
                         </select>
                     </div>
                     <div class="col">
@@ -175,15 +178,16 @@ if(isset($_GET['search'])){
       </td>
     </tr>
 
-<?php } ?>
+<?php
+    } ?>
     </tbody>
 </table>
-<?php }else{ ?>
+<?php } else { ?>
   <h6>You don't have permission to go there. </h6>
 <?php }  ?>  
 </div>
 
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .role-content{
     margin-left:250px;

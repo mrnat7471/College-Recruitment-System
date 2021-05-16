@@ -1,10 +1,10 @@
-<?php 
+<?php
 
-session_start(); 
+session_start();
 require_once '../controllers/permission_checker.php';
 
 // Destroys session when logout button is pushed.
-if(isset($_GET['logout'])){
+if (isset($_GET['logout'])) {
     session_unset();
     session_destroy();
     header('Location: ./');
@@ -42,19 +42,19 @@ if(isset($_GET['logout'])){
       </li>
 
       <li class="nav-item dropdown">
-      <?php if($PROGRESS >= 1){ ?>
+      <?php if ($PROGRESS >= 1) { ?>
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Applications
         </a>
       <?php } ?>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="../recruit/your-applications">Your Applications</a>
-            <?php if($PROGRESS >= 3){ ?>
+            <?php if ($PROGRESS >= 3) { ?>
               <!--<a class="dropdown-item disabled" href="../recruit/enrolment">Enrolment</a>-->
               <a class="dropdown-item" href="../recruit/evidence">Evidence</a>
             <?php } ?>
           <div class="dropdown-divider"></div>
-          <?php if($PROGRESS >= 2){ ?>
+          <?php if ($PROGRESS >= 2) { ?>
             <a class="dropdown-item" href="../recruit/interview">Interview</a>
           <?php } ?>
           <a class="dropdown-item" href="../recruit/messages">Messages</a>
@@ -62,7 +62,7 @@ if(isset($_GET['logout'])){
       </li>
 
       <li class="nav-item dropdown">
-        <?php if($ADMIN_READ === 1){ ?>
+        <?php if ($ADMIN_READ === 1) { ?>
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Administrator
         </a>
@@ -72,25 +72,25 @@ if(isset($_GET['logout'])){
           <a class="dropdown-item" href="../admin/all-applications">All Applications</a>
           <a class="dropdown-item" href="../admin/your-applications">Applications assigned to you</a>
           <a class="dropdown-item" href="../admin/messages">Messages</a>
-          <?php if($USER_ROLE_MANAGE === 1 || $ROLE_MANAGE === 1){?>
+          <?php if ($USER_ROLE_MANAGE === 1 || $ROLE_MANAGE === 1) {?>
             <div class="dropdown-divider"></div>
-            <?php if($USER_ROLE_MANAGE === 1){ ?>
+            <?php if ($USER_ROLE_MANAGE === 1) { ?>
             <a class="dropdown-item" href="../admin/account-management">Account Management</a>
             <?php } ?>
-            <?php if($ROLE_MANAGE === 1){ ?>
+            <?php if ($ROLE_MANAGE === 1) { ?>
             <a class="dropdown-item" href="../admin/role-management">Role Management</a>
             <?php } ?>
           <?php } ?>
         </div>
       </li>
-      <?php if(isset($_SESSION['loggedin'])){ ?>
+      <?php if (isset($_SESSION['loggedin'])) { ?>
         <li class="nav-item">
         <a class="nav-link" href="../account"><i class="fas fa-user"></i> Account</a>
       </li>
         <li class="nav-item">
             <a class="nav-link" href="../?logout=true">Logout</a>
         </li>
-      <?php } else{ ?>
+      <?php } else { ?>
       <li class="nav-item">
         <a class="nav-link" href="../account/login"><i class="fas fa-user"></i> Login</a>
       </li>
@@ -105,26 +105,26 @@ if(isset($_GET['logout'])){
     </form>-->
   </div>
 </nav>
-<?php if(isset($_GET['success']) || isset($_GET['danger'])){ ?>
+<?php if (isset($_GET['success']) || isset($_GET['danger'])) { ?>
 <div class="m-2">
-    <?php if(isset($_GET['success'])){ ?>
+    <?php if (isset($_GET['success'])) { ?>
     <div class="alert alert-success" role="alert">
         <?= $_GET['success']; ?>
     </div>
-    <?php } if(isset($_GET['danger'])){ ?>
+    <?php } if (isset($_GET['danger'])) { ?>
     <div class="alert alert-danger" role="alert">
         <?= $_GET['danger']; ?>
     </div>
     <?php } ?>
 </div>
 <?php } ?>
-<?php if(isset($success_message) || isset($danger_message)){ ?>
+<?php if (isset($success_message) || isset($danger_message)) { ?>
 <div class="m-2">
-    <?php if(isset($success_message)){ ?>
+    <?php if (isset($success_message)) { ?>
     <div class="alert alert-success" role="alert">
         <?= $success_message; ?>
     </div>
-    <?php } if(isset($danger_message)){ ?>
+    <?php } if (isset($danger_message)) { ?>
     <div class="alert alert-danger" role="alert">
         <?= $danger_message; ?>
     </div>

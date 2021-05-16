@@ -1,6 +1,6 @@
 <?php include '../layout/navbar.php';
 
-if(isset($_POST['subject'])){
+if (isset($_POST['subject'])) {
     // Grabs receiver's firstName, lastName, email.
     $receiver = $_POST['receiver'];
     $stmt = $link->prepare('SELECT firstName, lastName, email FROM users WHERE uuid = ?');
@@ -8,7 +8,7 @@ if(isset($_POST['subject'])){
     $stmt->execute();
     $stmt->bind_result($user_firstName, $user_lastName, $user_email);
     $stmt->fetch();
-    $stmt->close(); 
+    $stmt->close();
     $sender = $_SESSION['id'];
 
     // Grabs staff's firstName, lastName
@@ -17,7 +17,7 @@ if(isset($_POST['subject'])){
     $stmt->execute();
     $stmt->bind_result($staff_firstName, $staff_lastName);
     $stmt->fetch();
-    $stmt->close(); 
+    $stmt->close();
     $subject = $_POST['subject'];
     $content = $_POST['content'];
 
@@ -30,8 +30,8 @@ if(isset($_POST['subject'])){
 
     $mailer = new Swift_Mailer($transport);
 
-        global $mailer;
-        $body = '<!DOCTYPE html>
+    global $mailer;
+    $body = '<!DOCTYPE html>
         <html>
         
         <head>
@@ -165,13 +165,13 @@ if(isset($_POST['subject'])){
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                         <tr>
                             <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                <p style="margin: 0;">Hello ' . $user_firstName . ',</p><br>
-                                <p style="margin: 0;">' . $content . '</p>
+                                <p style="margin: 0;">Hello '.$user_firstName.',</p><br>
+                                <p style="margin: 0;">'.$content.'</p>
                             </td>
                         </tr>
                         <tr>
                             <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: Lato, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                <p style="margin: 0;">Cheers,<br>' . $staff_firstName . ' ' . $staff_lastName . '</p>
+                                <p style="margin: 0;">Cheers,<br>'.$staff_firstName.' '.$staff_lastName.'</p>
                             </td>
                         </tr>
                     </table>
@@ -193,46 +193,45 @@ if(isset($_POST['subject'])){
         
         </html>';
 
-        // Create a message
-        $message = (new Swift_Message('Calderdale College - ' . $subject))
+    // Create a message
+    $message = (new Swift_Message('Calderdale College - '.$subject))
             ->setFrom('website@reachradio.co.uk')
             ->setTo($user_email)
             ->setBody($body, 'text/html');
 
-        // Send the message
-        $emailresult = $mailer->send($message);
+    // Send the message
+    $emailresult = $mailer->send($message);
 
-        // Add message to messages table for future access via message page.
-        $sql = "INSERT INTO messages (receiver, sender, subject, content) VALUES ('$receiver', '$sender', '$subject', '$content')";
+    // Add message to messages table for future access via message page.
+    $sql = "INSERT INTO messages (receiver, sender, subject, content) VALUES ('$receiver', '$sender', '$subject', '$content')";
 
-        if ($conn->query($sql) === TRUE) {
-            $success_message = "Your message has been sent.";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+    if ($conn->query($sql) === true) {
+        $success_message = 'Your message has been sent.';
+    } else {
+        echo 'Error: '.$sql.'<br>'.$conn->error;
     }
+}
 
 $connection = $link;
 $id = $_SESSION['id'];
 $sql3 = "SELECT * FROM applications WHERE staff_id=$id";
-$result3 = mysqli_query($connection, $sql3) or die("Error in Selecting " . mysqli_error($connection));
-$emparray3 = array();
-while($row3 =mysqli_fetch_assoc($result3))
-{
+$result3 = mysqli_query($connection, $sql3) or exit('Error in Selecting '.mysqli_error($connection));
+$emparray3 = [];
+while ($row3 = mysqli_fetch_assoc($result3)) {
     $emparray3[] = $row3;
 }
 $apidata3 = json_encode($emparray3);
-$data3 = json_decode($apidata3);?>
+$data3 = json_decode($apidata3); ?>
 <div class="content">
-<?php if($APPLICANT_READ == 1){ ?>
+<?php if ($APPLICANT_READ == 1) { ?>
     <h5><b>Messages</b></h5>
-    <?php if(isset($success_message) || isset($danger_message)){ ?>
+    <?php if (isset($success_message) || isset($danger_message)) { ?>
     <div class="m-2">
-        <?php if(isset($success_message)){ ?>
+        <?php if (isset($success_message)) { ?>
         <div class="alert alert-success" role="alert">
             <?= $success_message; ?>
         </div>
-        <?php } if(isset($danger_message)){ ?>
+        <?php } if (isset($danger_message)) { ?>
         <div class="alert alert-danger" role="alert">
             <?= $danger_message; ?>
         </div>
@@ -243,16 +242,17 @@ $data3 = json_decode($apidata3);?>
         <label>Receiver (Claimed Applications):</label>
         <select name="receiver" class="form-control">
                     <option value="" selected="selected" disabled="disabled">-- select one --</option>
-            <?php foreach($data3 as $apidata3){
-                    $profile_id = $apidata3->profile_id;
-                    $stmt = $link->prepare('SELECT firstName, lastName FROM users WHERE uuid = ?');
-                    $stmt->bind_param('i', $profile_id);
-                    $stmt->execute();
-                    $stmt->bind_result($user_firstName, $user_lastName);
-                    $stmt->fetch();
-                    $stmt->close(); ?>
+            <?php foreach ($data3 as $apidata3) {
+    $profile_id = $apidata3->profile_id;
+    $stmt = $link->prepare('SELECT firstName, lastName FROM users WHERE uuid = ?');
+    $stmt->bind_param('i', $profile_id);
+    $stmt->execute();
+    $stmt->bind_result($user_firstName, $user_lastName);
+    $stmt->fetch();
+    $stmt->close(); ?>
                     <option value="<?=$profile_id?>"><?=$user_firstName?> <?=$user_lastName?></option>
-            <?php } ?>
+            <?php
+} ?>
         </select><br>
         <label>Subject:</label><br>
         <input type="text" name="subject" class="form-control" required><br>
@@ -262,11 +262,11 @@ $data3 = json_decode($apidata3);?>
 
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Send</button><br><br>
     </form>
-<?php }else{ ?>
+<?php } else { ?>
   <h6>You don't have permission to go there. </h6>
 <?php }  ?>  
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .content{
     margin-left:250px;

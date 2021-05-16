@@ -8,7 +8,7 @@ $stmt->bind_result($firstName);
 $stmt->fetch();
 $stmt->close();
 
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     // Grabs selected message details.
     $id = $_GET['id'];
     $stmt = $link->prepare('SELECT * FROM messages WHERE uuid = ?');
@@ -82,7 +82,7 @@ if(isset($_GET['id'])){
             </tr>
         </table>
 </div>
-<?php include '../layout/footer.php';?>
+<?php include '../layout/footer.php'; ?>
 <style>
 .content{
     margin-left:250px;
